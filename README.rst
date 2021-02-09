@@ -21,6 +21,8 @@ Description
 
 ``heatmap`` is a ChRIS-based application that displays the difference between training masks and inference labels for low contrast, grayscale images. The plugin    initiates a 256x256 numpy array of zeros and and changes each pixel value according the the absolute difference between the training mask and inference image.  The plugin takes a directory with two images (the training mask and inference image of the same voxel) as input, and an empty directory for output as arguments. 
 
+P.S. ``pl-heatmap`` can only run on a greyscale (256 X 256 pixels) images.
+
 Usage
 -----
 
@@ -32,8 +34,8 @@ Usage
         [--savejson <DIR>]
         [-v|--verbosity <level>]
         [--version]
-	[--input1]                                                 
-        [--input2]                                                  
+	[--input1 <sample1Dir>]                                                 
+        [--input2 <sample2Dir>]                                                  
         <inputDir> <outputDir>
 
 
@@ -63,10 +65,10 @@ Arguments
     [--version]
     If specified, print version number and exit. 
     
-    [--input1]
+    [--input1 <sample1Dir>]
     The name of the subdirectory of the input directory to containing either inferred or ground truth images
 
-    [--input2]
+    [--input2 <sample2Dir>]
     The name of the subdirectory of the input directory to containing either inferred or ground truth images
 
 
