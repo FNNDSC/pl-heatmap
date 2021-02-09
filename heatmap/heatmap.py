@@ -17,6 +17,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from skimage.io import imread
 from chrisapp.base import ChrisApp
+import glob
 
 
 Gstr_title = """
@@ -47,15 +48,15 @@ where necessary.)
             [--savejson <DIR>]                                          \\
             [-v <level>] [--verbosity <level>]                          \\
             [--version]                                                 \\
-            [--input1]                                                  \\
-            [--input2]                                                  \\
+            [--input1 <sample1Dir>]                                     \\
+            [--input2 <sample2Dir>]                                     \\
             <inputDir>                                                  \\
             <outputDir> 
     BRIEF EXAMPLE
         * Bare bones execution
-            docker run --rm -u $(id -u)                             \
-                -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing      \
-                fnndsc/pl-heatmap heatmap                        \
+            docker run --rm -u $(id -u)                               \
+                -v $(pwd)/in:/incoming -v $(pwd)/out:/outgoing        \
+                fnndsc/pl-heatmap heatmap --input1 dir1 --input2 dir2 \
                 /incoming /outgoing
     DESCRIPTION
         `heatmap.py` ...
@@ -79,9 +80,9 @@ where necessary.)
         
         [--version]
         If specified, print version number and exit. 
-        [--input1]
+        [--input1 <sample1Dir>]
         The name of the subdirectory of the input directory to containing either inferred or ground truth images
-        [--input2]
+        [--input2 <sample2Dir>]
         The name of the subdirectory of the input directory to containing either inferred or ground truth images
 """
 
@@ -99,7 +100,7 @@ class Heatmap(ChrisApp):
     TYPE                    = 'ds'
     DESCRIPTION             = 'An app to examine the inference differences between predictions and ground truth masks for low contrast images'
     DOCUMENTATION           = 'heatmap'
-    VERSION                 = '0.1'
+    VERSION                 = '1.0.1'
     ICON                    = '' # url of an icon image
     LICENSE                 = 'Opensource (MIT)'
     MAX_NUMBER_OF_WORKERS   = 1  # Override with integer value
@@ -158,25 +159,25 @@ class Heatmap(ChrisApp):
         img2 = []
 
         print("Loading Images...")
-        print(os.scandir(options.inputdir))
-        print(os.scandir(options.inputdir))
-        for entry in os.scandir(options.inputdir):
-            if entry.name == options.input1:
-                for file in os.scandir(entry):
-                    if (file.path.endswith(".jpg") or file.path.endswith(".png")) and file.is_file():
-                        img1.append(file.path)
-            if entry.name == options.input2:
-                for file in os.scandir(entry):
-                    if (file.path.endswith(".jpg") or file.path.endswith(".png")) and file.is_file():
-                        img2.append(file.path)
 
         
-        self.create_heatmap(options, img1, img2)
+        for file in os.scandir(os.path.join(options.inputdir,options.input1)):
+            if (file.path.endswith(".jpg") or file.path.endswith(".png")) and file.is_file():
+                img1.append(file.path)
 
-    def create_heatmap(self, options, img1, img2):
+        for file in os.scandir(os.path.join(options.inputdir,options.input2)):
+            if (file.path.endswith(".jpg") or file.path.endswith(".png")) and file.is_file():
+                img2.append(file.path)
+
+        
+        self.create_heatmap(options, sorted(img1),sorted(img2))
+
+    def create_heatmap(self, options,img1, img2):
+    
 
         array_length = len(img1)
         for num in range(array_length):
+        
         
             single_img1 = imread(img1[num])
             single_img2 = imread(img2[num])

@@ -6,7 +6,7 @@ with open(path.join(path.dirname(path.abspath(__file__)), 'README.rst')) as f:
 
 setup(
     name             = 'heatmap',
-    version          = '0.1',
+    version          = '1.0.1',
     description      = 'An app to examine the inference differences between predictions and ground truth masks for low contrast images',
     long_description = readme,
     author           = 'Ken Krebs',
