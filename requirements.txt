@@ -3,3 +3,5 @@ nose~=1.3.7
 numpy
 matplotlib
 scikit-image
+imutils
+opencv_python
