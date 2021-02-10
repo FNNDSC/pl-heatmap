@@ -1,15 +1,3 @@
-.. code:: console
-     _                _
-    | |              | |
-    | |__   ___  __ _| |_ _ __ ___   __ _ _ __
-    | '_ \ / _ \/ _` | __| '_ ` _ \ / _` | '_ \
-    | | | |  __/ (_| | |_| | | | | | (_| | |_) |
-    |_| |_|\___|\__,_|\__|_| |_| |_|\__,_| .__/
-                                         | |
-                                         |_|
-
-
-
 pl-heatmap
 ================================
 
@@ -20,6 +8,18 @@ pl-heatmap
     :target: https://github.com/FNNDSC/pl-heatmap/blob/master/setup.py
 
 .. contents:: Table of Contents
+
+
+.. code:: console
+
+     _                _                         
+    | |              | |                        
+    | |__   ___  __ _| |_ _ __ ___   __ _ _ __  
+    | '_ \ / _ \/ _` | __| '_ ` _ \ / _` | '_ \ 
+    | | | |  __/ (_| | |_| | | | | | (_| | |_) |
+    |_| |_|\___|\__,_|\__|_| |_| |_|\__,_| .__/ 
+                                         | |    
+                                         |_|    
 
 
 Abstract
@@ -35,14 +35,14 @@ Description
 
 Output images are stored in a per-slice manner in the following subdirectories of <outputDir>:
 
-    * heatmap       -   the actual heatmap difference
-    * threshold     -   thresholded difference
-    * contourA      -   difference rectangles on image A
-    * contourB      -   difference rectangles on image B
+* heatmap       -   the actual heatmap difference
+* threshold     -   thresholded difference
+* contourA      -   difference rectangles on image A
+* contourB      -   difference rectangles on image B
 
 Output measure per image slice:
 
-    * Structural Similarity Index, stored as JSON return.
+* Structural Similarity Index, stored as JSON return.
 
 The module assumes that each image set has the same number of constituent images (or slices) and that each constituent image corresponding between the two sets is the same size.
 
