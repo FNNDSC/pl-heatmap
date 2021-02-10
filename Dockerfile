@@ -21,16 +21,15 @@
 #   docker run -ti -e HOST_IP=$(ip route | grep -v docker | awk '{if(NF==11) print $9}') --entrypoint /bin/bash local/pl-heatmap
 #
 
-FROM fnndsc/ubuntu-python3:latest
-MAINTAINER fnndsc "dev@babymri.org"
+FROM python:3.9.1-slim-buster
+LABEL maintainer="Sandip Samal <sandip.samal@childrens.harvard.edu>"
 
 WORKDIR /usr/local/src
+
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
 COPY . .
-RUN pip --disable-pip-version-check install -r requirements.txt && pip install .
+RUN pip install .
 
-# the precedent is for a plugin to be run like
-# docker run --entrypoint /usr/bin/python fnndsc/pl-appname appname /in /out
-# executable scripts are expected to be found in the working directory
-WORKDIR /usr/local/bin
-CMD ["heatmap.py", "--help"]
-
+CMD ["heatmap", "--help"]

@@ -2,14 +2,12 @@
 #
 # heatmap ds ChRIS plugin app
 #
-# (c) 2016-2020 Fetal-Neonatal Neuroimaging & Developmental Science Center
+# (c) 2021 Fetal-Neonatal Neuroimaging & Developmental Science Center
 #                   Boston Children's Hospital
 #
 #              http://childrenshospital.org/FNNDSC/
 #                        dev@babyMRI.org
 #
-
-
 
 import os
 # import importlib.metadata
@@ -18,6 +16,7 @@ from matplotlib import pyplot as plt
 from skimage.io import imread
 from chrisapp.base import ChrisApp
 import glob
+
 
 
 Gstr_title = """
@@ -86,23 +85,15 @@ where necessary.)
         The name of the subdirectory of the input directory to containing either inferred or ground truth images
 """
 
-
 class Heatmap(ChrisApp):
     """
-    An app to examine the inference differences between predictions and ground truth masks for low contrast images
+    An app to compare a set of 2 different png (256x256 px) images and generate a heatmap
     """
-    AUTHORS                 = 'Ken Krebs <kenkrebs@bu.edu>'
-    SELFPATH                = '/usr/local/bin'
-    SELFEXEC                = 'heatmap'
-    EXECSHELL               = 'python'
-    TITLE                   = 'A ChRIS plugin app'
+    PACKAGE                 = __package__
+    TITLE                   = 'A heatmap generating app'
     CATEGORY                = ''
     TYPE                    = 'ds'
-    DESCRIPTION             = 'An app to examine the inference differences between predictions and ground truth masks for low contrast images'
-    DOCUMENTATION           = 'heatmap'
-    VERSION                 = '1.0.1'
     ICON                    = '' # url of an icon image
-    LICENSE                 = 'Opensource (MIT)'
     MAX_NUMBER_OF_WORKERS   = 1  # Override with integer value
     MIN_NUMBER_OF_WORKERS   = 1  # Override with integer value
     MAX_CPU_LIMIT           = '' # Override with millicore value as string, e.g. '2000m'
@@ -192,8 +183,3 @@ class Heatmap(ChrisApp):
             print("Saving heatmap image number ", str(num))
             plt.savefig(outputfile)
 
-# ENTRYPOINT
-if __name__ == "__main__":
-    
-    chris_app = Heatmap()
-    chris_app.launch()
