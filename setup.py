@@ -6,11 +6,14 @@ with open(path.join(path.dirname(path.abspath(__file__)), 'README.rst')) as f:
 
 setup(
     name             = 'heatmap',
-    version          = '0.1',
-    description      = 'An app to compare a set of 2 different png (256x256 px) images and generate a heatmap',
+    version          = '2.0.0',
+    description      = """
+        A ChRIS DS plugin that compares two different image sets
+        and generates useful difference image data and metrics.
+    """,
     long_description = readme,
-    author           = 'Sandip Samal',
-    author_email     = 'sandip.samal@childrens.harvard.edu',
+    author           = 'FNNDSC Developers',
+    author_email     = 'dev@babymri.org',
     url              = 'http://wiki',
     packages         = ['heatmap'],
     install_requires = ['chrisapp'],
