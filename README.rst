@@ -34,7 +34,7 @@ Usage
         [--savejson <DIR>]
         [-v|--verbosity <level>]
         [--version]
-	[--input1 <sample1Dir>]                                                 
+	    [--input1 <sample1Dir>]                                                 
         [--input2 <sample2Dir>]                                                  
         <inputDir> <outputDir>
 

@@ -6,19 +6,22 @@ with open(path.join(path.dirname(path.abspath(__file__)), 'README.rst')) as f:
 
 setup(
     name             = 'heatmap',
-    version          = '1.0.1',
-    description      = 'An app to examine the inference differences between predictions and ground truth masks for low contrast images',
+    version          = '0.1',
+    description      = 'An app to compare a set of 2 different png (256x256 px) images and generate a heatmap',
     long_description = readme,
-    author           = 'Ken Krebs',
-    author_email     = 'kenkrebs@bu.edu',
-    url              = 'heatmap',
+    author           = 'Sandip Samal',
+    author_email     = 'sandip.samal@childrens.harvard.edu',
+    url              = 'http://wiki',
     packages         = ['heatmap'],
-    install_requires = ['chrisapp~=1.1.6', 'numpy'],
+    install_requires = ['chrisapp'],
     test_suite       = 'nose.collector',
     tests_require    = ['nose'],
     license          = 'MIT',
     zip_safe         = False,
     python_requires  = '>=3.8',
-    scripts          = ['heatmap/heatmap.py'])
-     
-
+    entry_points     = {
+        'console_scripts': [
+            'heatmap = heatmap.__main__:main'
+            ]
+        }
+)
