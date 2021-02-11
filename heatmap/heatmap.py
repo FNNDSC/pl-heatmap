@@ -228,27 +228,29 @@ class Heatmap(ChrisApp):
         imageAcount :   int     = 0
         imageBcount :   int     = 0
 
-        print("Determining list of image filenames...")
+        print("\n--->Determining list of image filenames<---")
 
-        print("Image set A:")
+        print("%-75s" % ("Image set A (%s)... " % options.str_inputSubDir1), end = "")
         for entry in sorted(os.scandir(
            os.path.join(options.inputdir, options.str_inputSubDir1)
             ), key=lambda e: e.name):
             if options.str_imageFilt1 in entry.name:
                 str_fileA = entry.path
                 self.lstr_imageAfiles.append(str_fileA)
-                print("Adding %s" % str_fileA)
+                # print("Adding %s" % str_fileA)
                 imageAcount += 1
+        print("%d images"  % imageAcount)
 
-        print("Image set B:")
+        print("%-75s" % ("Image set B (%s)... " % options.str_inputSubDir2), end = "")
         for entry in sorted(os.scandir(
            os.path.join(options.inputdir, options.str_inputSubDir2)
             ), key=lambda e: e.name):
             if options.str_imageFilt2 in entry.name:
                 str_fileB = entry.path
                 self.lstr_imageBfiles.append(str_fileB)
-                print("Adding %s" % str_fileB)
+                # print("Adding %s" % str_fileB)
                 imageBcount += 1
+        print("%d images"  % imageBcount)
 
         # This remainder is just for return message status and reporting
         if imageAcount and imageBcount:
@@ -284,14 +286,16 @@ class Heatmap(ChrisApp):
         fileCount   :   int     = 0
         b_status    :   bool    = False
 
+        print("\n--->Reading actual image files<---")
         if d_prior['status']:
-            print("Reading actual image files...")
+            print("%-75s" % "loading image set A and set B... ", end = "")
             for (str_fileA, str_fileB) in zip(  self.lstr_imageAfiles,
                                                 self.lstr_imageBfiles):
                 b_status                        = True
                 self.l_imageA.append(cv2.imread(str_fileA))
                 self.l_imageB.append(cv2.imread(str_fileB))
                 fileCount += 1
+            print("%d files read." % fileCount)
 
         return {
             'status':       b_status,
@@ -309,8 +313,9 @@ class Heatmap(ChrisApp):
         fileCount   :   int     = 0
         i           :   int     = 0
 
+        print("\n--->Converting to grayScale<---")
         if d_prior['status']:
-            print("Converting to grayScale...")
+            print("%-75s" % "converting image set A and set B... ", end = "")
             for i in range(0, len(self.l_imageA)):
                 b_status                = True
                 self.l_imageAgray.append(
@@ -321,6 +326,7 @@ class Heatmap(ChrisApp):
                     cv2.cvtColor( self.l_imageB[i],
                                   cv2.COLOR_BGR2GRAY)
                 )
+            print("%d images converted." % i)
 
         return {
             'status':   b_status,
@@ -335,11 +341,12 @@ class Heatmap(ChrisApp):
         b_status    :   bool    = False
         i           :   int     = 0
 
+        print("\n--->Processing grayScale slices<---")
         if d_prior['status']:
-            print("Processing gray scale slices")
+            print("%-75s" % "calculating... ", end = "")
             for i in range(0, len(self.l_imageA)):
                 b_status                = True
-                print("Calculating difference for slice  %3d..." % i)
+                # print("Calculating difference for slice  %3d..." % i)
                 (score, imdiff)         = ssim(
                                                 self.l_imageAgray[i],
                                                 self.l_imageBgray[i],
@@ -349,18 +356,20 @@ class Heatmap(ChrisApp):
                 self.l_imageDiff.append((imdiff * 255).astype("uint8"))
                 self.l_SSIM.append(score)
 
-                print("Thresholding and contouring slice %3d..." % i)
+                # print("Thresholding and contouring slice %3d..." % i)
                 self.l_imageThresh.append(cv2.threshold(
                     self.l_imageDiff[i], 0, 255,
                     cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
                 )
-                print("Contouring slice                  %3d..." % i)
+                # print("Contouring slice                  %3d..." % i)
                 contour     = cv2.findContours(
                     self.l_imageThresh[i].copy(),
                     cv2.RETR_EXTERNAL,
                     cv2.CHAIN_APPROX_SIMPLE
                 )
                 self.l_imageContour.append(imutils.grab_contours(contour))
+            print("difference, threshold, and contour.")
+
         return {
             'status':   b_status,
             'method':   self.method_name(),
@@ -374,15 +383,21 @@ class Heatmap(ChrisApp):
         b_status        :   bool    = False
         str_baseoutput  :   str     = ""
 
+        print("\n--->Saving outputs<---")
         if d_prior['status']:
             for str_dir in self.lstr_outputDirs:
                 str_outputPath  = os.path.join(options.outputdir, str_dir)
                 os.makedirs(str_outputPath, exist_ok = True)
-                print("Saving computed image slices for %s..." % str_outputPath)
+                print("%-75s" % ("Saving computed image slices for %s... " % str_outputPath), end = "")
                 for i in range(0, len(self.l_imageA)):
                     b_status                = True
                     str_outputImageFile     = "%s/slice-%d.png" % (str_outputPath, i)
-                    print("Saving %30s..." % (str_outputImageFile))
+                    if str_dir == 'naive':
+                        imageA      = self.l_imageA[i]
+                        imageB      = self.l_imageB[i]
+                        imageC      = np.abs(imageA - imageB)
+                        heatmap     = cv2.applyColorMap(imageC, cv2.COLORMAP_HOT)
+                        cv2.imwrite(str_outputImageFile, heatmap)
                     if str_dir == 'heatmap':
                         image       = self.l_imageDiff[i]
                         heatmap     = cv2.applyColorMap(image, cv2.COLORMAP_HOT)
@@ -401,7 +416,7 @@ class Heatmap(ChrisApp):
                                             (0, 0, 255), 2
                                         )
                             cv2.imwrite(str_outputImageFile, image)
-
+                print("done.")
             with open('%s/SSIN.json' % options.outputdir, 'w')  as jsonfile:
                 json.dump(self.l_SSIM, jsonfile, indent = 4)
 
@@ -463,7 +478,7 @@ class Heatmap(ChrisApp):
         self.l_imageContour     :   list    = []
         self.l_SSIM             :   list    = []
 
-        self.lstr_outputDirs    :   list    = ['heatmap', 'threshold', 'contourA', 'contourB']
+        self.lstr_outputDirs    :   list    = ['naive', 'heatmap', 'threshold', 'contourA', 'contourB']
         d_run = self.outputs_generate(options,
                     self.grayScale_slicesProcess(options,
                         self.imageSlices_toGrayScale(options,
