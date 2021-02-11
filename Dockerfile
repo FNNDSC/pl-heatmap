@@ -22,12 +22,14 @@
 #
 
 FROM python:3.9.1-slim-buster
-LABEL maintainer="Sandip Samal <sandip.samal@childrens.harvard.edu>"
+LABEL maintainer="FNNDSC devs <dev@babymri.org>"
 
 WORKDIR /usr/local/src
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
+RUN apt-get update
+RUN apt-get install ffmpeg libsm6 libxext6  -y
 
 COPY . .
 RUN pip install .
