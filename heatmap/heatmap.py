@@ -391,7 +391,7 @@ class Heatmap(ChrisApp):
                 print("%-75s" % ("Saving computed image slices for %s... " % str_outputPath), end = "")
                 for i in range(0, len(self.l_imageA)):
                     b_status                = True
-                    str_outputImageFile     = "%s/slice-%d.png" % (str_outputPath, i)
+                    str_outputImageFile     = "%s/slice-%03d.png" % (str_outputPath, i)
                     if str_dir == 'naive':
                         imageA      = self.l_imageA[i]
                         imageB      = self.l_imageB[i]

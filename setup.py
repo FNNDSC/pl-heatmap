@@ -6,7 +6,7 @@ with open(path.join(path.dirname(path.abspath(__file__)), 'README.rst')) as f:
 
 setup(
     name             = 'heatmap',
-    version          = '2.0.4',
+    version          = '2.0.6',
     description      = """
         A ChRIS DS plugin that compares two different image sets
         and generates useful difference image data and metrics.
